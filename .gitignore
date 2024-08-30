@@ -5,6 +5,8 @@
 .env
 /.history
 
+/data
+
 # production
 /build
 
