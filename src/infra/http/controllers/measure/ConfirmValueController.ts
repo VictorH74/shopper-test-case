@@ -2,7 +2,10 @@ import { IConfirmValue } from '@/application/interfaces/use-cases/measure/IConfi
 import { BaseController } from '@/infra/http/controllers/BaseController';
 import { HttpRequest } from '@/infra/http/interfaces/HttpRequest';
 import { HttpResponse } from '@/infra/http/interfaces/HttpResponse';
-import { notFound, ok } from '@/infra/http/helpers/http';
+import { badRequest, conflict, notFound, ok, serverError } from '@/infra/http/helpers/http';
+import { InvalidDataError } from '@/application/errors/InvalidDataError';
+import { ConfirmationDuplicateError } from '@/application/errors/ConfirmationDuplicateError';
+import { MeasureNotFoundError } from '@/application/errors/MeasureNotFoundError';
 
 export class ConfirmValueController extends BaseController {
   constructor(
@@ -14,11 +17,26 @@ export class ConfirmValueController extends BaseController {
   async execute(
     httpRequest: ConfirmValueController.Request,
   ): Promise<ConfirmValueController.Response> {
-    const { id } = httpRequest.params!;
-    const responseData = await this.ConfirmValue.execute(id);
-    // if (responseData instanceof SomeError) {
-    //   return notFound(responseData);
-    // }
+    const reqBody = httpRequest.body;
+
+    const responseData = await this.ConfirmValue.execute(reqBody!);
+
+    if (responseData instanceof ConfirmationDuplicateError) {
+      return conflict(responseData);
+    }
+
+    if (responseData instanceof InvalidDataError) {
+      return badRequest(responseData);
+    }
+
+    if (responseData instanceof MeasureNotFoundError) {
+      return notFound(responseData);
+    }
+
+    if (responseData instanceof Error) {
+      return serverError(responseData);
+    }
+
     return ok(responseData);
   }
 }

@@ -1,24 +1,20 @@
 import { IConfirmValue } from '@/application/interfaces/use-cases/measure/IConfirmValue';
-import { ConfirmValueRepository } from '@/application/interfaces/repositories/measure/ConfirmValueRepository';
+import { MeasureNotFoundError } from '@/application/errors/MeasureNotFoundError';
+import { ConfirmationDuplicateError } from '@/application/errors/ConfirmationDuplicateError';
+import { MeasureRepository } from '@/infra/db/postgres/MeasureRepository';
 
 export class ConfirmValueImpl implements IConfirmValue {
     constructor(
-        private readonly ConfirmValueRepository: ConfirmValueRepository, // TODO: remove
-        // private readonly GetMeasureByIdRepository: GetMeasureByIdRepository, // TODO: include
-        // private readonly UpdateMeasureRepository: UpdateMeasureRepository, // TODO: include
+        private readonly MeasureRepository: MeasureRepository,
     ) { }
 
     async execute(reqBody: IConfirmValue.Request): Promise<IConfirmValue.Response> {
+        const measure = await this.MeasureRepository.getMeasureById(reqBody.measure_uuid)
+        if (!measure) return new MeasureNotFoundError();
 
-        // TODO: Verificar se o 'reqBody.measure_uuid' informado existe. caso não, retornar MeasureNotFoundError()
-        // const measure = await GetMeasureByIdRepository.getMeasureByIdRepository(reqBody.measure_uuid)
-        // if (!measure) return MeasureNotFoundError();
+        if (measure.has_confirmed) return new ConfirmationDuplicateError();
 
-        // TODO: Verificar se 'has_confirmed' é == true (já foi confirmado). então retornar ConfirmationDuplicateError()
-        // if (measure.has_confirmed) return ConfirmationDuplicateError();
-
-        // TODO: Atualizar measure com 'measure_value' = 'reqBody.confirmed_value'
-        // await UpdateMeasureRepository.updateMeasureRepository(reqBody.measure_uuid, {...measure, measure_value: reqBody.confirmed_value, has_confirmed: true})
+        await this.MeasureRepository.updateMeasure(reqBody.measure_uuid, {...measure, measure_value: reqBody.confirmed_value, has_confirmed: true})
 
         return { success: true };
     }

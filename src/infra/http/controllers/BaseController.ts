@@ -9,6 +9,7 @@ export abstract class BaseController {
     try {
       return await this.execute(httpRequest);
     } catch (error) {
+      console.error(error)
       return serverError(error);
     }
   }

@@ -1,8 +1,7 @@
 import { IConfirmValue } from '@/application/interfaces/use-cases/measure/IConfirmValue';
 import { ConfirmValueImpl } from '@/application/use-cases/measure/ConfirmValueImpl';
-import { MeasureRepository } from '@/infra/db/prismaOrm/repositories/MeasureRepository';
+import { measureRepositoryInstance } from '@/infra/db/postgres/MeasureRepository';
 
 export const makeConfirmValue = (): IConfirmValue => {
-  const measureRepository = new MeasureRepository();
-  return new ConfirmValueImpl(measureRepository);
+  return new ConfirmValueImpl(measureRepositoryInstance);
 };
