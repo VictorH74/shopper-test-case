@@ -6,6 +6,9 @@ import { getMeasureValueFromImage } from '@/main/lib/gemini-ia';
 import { MeasureProps } from '@/domain/entities/Measure';
 import { MeasureRepository } from '@/infra/db/postgres/MeasureRepository';
 import { ServerError } from '@/infra/http/errors/ServerError';
+import path from 'path';
+import { ImageRepository } from '@/infra/db/postgres/ImageRepository';
+import { Image } from '@/domain/entities/Image';
 
 function validateString(input: string): boolean {
   const pattern = /^[0-9]+/;
@@ -14,9 +17,9 @@ function validateString(input: string): boolean {
 
 function extractNumber(input: string): number {
   if (!validateString(input)) {
-    console.error('Erro ao extratir valor inteiro da leitura: String não segue o padrão definido "**{measureValue}**"')
+    console.error('Erro ao extratir valor inteiro da leitura')
     console.error('input value: ', input)
-    throw new Error();
+    throw new Error('Erro ao extratir valor da leitura');
   }
 
   return Number(input);
@@ -48,13 +51,18 @@ const getCurrentMonthDate = (measure_datetime: Date) => {
 export class UploadImageImpl implements IUploadImage {
   constructor(
     private readonly MeasureRepository: MeasureRepository,
+    // private readonly ImageRepository: ImageRepository,
   ) { }
 
   async execute(reqBody: IUploadImage.Request): Promise<IUploadImage.Response> {
     const reqMeasureDate = new Date(reqBody.measure_datetime)
     const currentMonthDate = getCurrentMonthDate(reqMeasureDate)
 
-    const has_measure = await this.MeasureRepository.checkExistenceOfMeasureByMonth(reqBody.customer_code, reqMeasureDate.toISOString(), currentMonthDate.toISOString(), reqBody.measure_type)
+    const has_measure = await this.MeasureRepository.checkExistenceOfMeasureByMonth(
+      reqBody.customer_code,
+      currentMonthDate.toISOString(),
+      reqMeasureDate.toISOString(), reqBody.measure_type)
+
     if (has_measure) {
       return new DoubleReportError();
     }
@@ -62,21 +70,27 @@ export class UploadImageImpl implements IUploadImage {
     const base64Image = reqBody.image;
 
     const { mimeType, extension } = extractBase64Details(base64Image)
-    const filePath = `/tmp/image.${extension}`;
 
-    const buffer = base64ToBuffer(base64Image)
+    const newImage: Image = {
+      buffer_data: base64ToBuffer(base64Image),
+      image_uuid: uuidv4(),
+      type: extension
+    }
 
-    fs.writeFileSync(filePath, buffer);
+    const uniqueFileName = `${newImage.image_uuid}.${extension}`;
+    const filePath = path.join('/tmp', uniqueFileName);
+
+    fs.writeFileSync(filePath, newImage.buffer_data);
 
     try {
       const iaResponse = await getMeasureValueFromImage(filePath, mimeType)
       const measureValue = extractNumber(iaResponse)
-      
-      fs.unlinkSync(filePath);
 
-      // TODO: Generate temp measure image url
-      // const tempMeasureUrl = await createTempImageUrl(base64Image)
-      const tempMeasureUrl = 'path/to/image.png'
+      fs.unlinkSync(filePath);
+      
+      // Não consegui a tempo 😔😔
+      // const savedImage = await this.ImageRepository.saveImage(newImage)
+      const tempMeasureUrl = `http://localhost:4000/images/${uniqueFileName}`
 
       const newMeasure: MeasureProps = {
         customer_code: reqBody.customer_code,
@@ -92,7 +106,6 @@ export class UploadImageImpl implements IUploadImage {
 
       const { image_url, measure_value, measure_uuid } = savedMeasure
 
-      // temp 
       const res: IUploadImage.Response = { image_url, measure_value, measure_uuid }
       return res;
 

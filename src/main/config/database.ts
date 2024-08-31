@@ -1,8 +1,6 @@
 import { Pool } from "pg";
-// TODO: integrate postgres db
 
 const {
-    DB_HOST,
     DB_NAME,
     DB_USER,
     DB_PASS,
@@ -10,7 +8,7 @@ const {
 } = process.env
 
 export const Client = new Pool({
-    host: DB_HOST,
+    host: 'postgres_db',
     database: DB_NAME,
     user: DB_USER,
     password: DB_PASS,
@@ -40,6 +38,26 @@ const createMeasureTable = async () => {
     }
 }
 
+const createImageTable = async () => {
+    const queryText = `
+    CREATE TABLE IF NOT EXISTS image (
+      image_uuid UUID PRIMARY KEY,
+      buffer_data BYTEA  NOT NULL,
+      type VARCHAR(10) NOT NULL
+    );
+  `;
+
+    try {
+        const res = await Client.query(queryText);
+        console.log('Tabela criada ou já existente:', res.command);
+    } catch (err) {
+        const stack = err instanceof Error ? err.stack : undefined;
+        console.error('Erro ao criar tabela:', stack);
+        console.error(err);
+    }
+}
+
 export const setupDbClient = async () => {
     await createMeasureTable()
+    await createImageTable()
 }
