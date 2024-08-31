@@ -1,24 +1,15 @@
-import { DeleteImageRepository } from "@/application/interfaces/repositories/image/DeleteImageRepository";
-import { GetExpiredImagesRepository } from "@/application/interfaces/repositories/image/GetExpiredImagesRepository";
+import { DeleteExpiredImagesRepository } from "@/application/interfaces/repositories/image/DeleteExpiredImagesRepository";
 import { GetImageByIdRepository } from "@/application/interfaces/repositories/image/GetImageByIdRepository";
 import { SaveImageRepository } from "@/application/interfaces/repositories/image/SaveImageRepository";
 import { Image } from "@/domain/entities/Image";
 import { Client } from "@/main/config/database";
 
-export class ImageRepository implements GetImageByIdRepository, DeleteImageRepository, SaveImageRepository, GetExpiredImagesRepository {
+export class ImageRepository implements GetImageByIdRepository, DeleteExpiredImagesRepository, SaveImageRepository {
 
-    async getExpiredImages(): Promise<GetExpiredImagesRepository.Response> {
+    async deleteExpiredImages(): Promise<DeleteExpiredImagesRepository.Response> {
         const currentDate = new Date().toISOString()
 
-        const queryText = `SELECT * FROM image WHERE expiration_date < $1`
-        const res = await Client.query<Image>(queryText, [currentDate])
-
-        return res.rows
-    }
-
-    async deleteImage(image_uuid: DeleteImageRepository.Request): Promise<DeleteImageRepository.Response> {
-
-        await Client.query('DELETE FROM image WHERE id = $1', [image_uuid])
+        await Client.query('DELETE FROM image WHERE expiration_date < $1', [currentDate])
     }
 
     async saveImage(image_data: SaveImageRepository.Request): Promise<SaveImageRepository.Response> {
