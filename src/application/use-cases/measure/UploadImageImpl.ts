@@ -51,7 +51,7 @@ const getCurrentMonthDate = (measure_datetime: Date) => {
 export class UploadImageImpl implements IUploadImage {
   constructor(
     private readonly MeasureRepository: MeasureRepository,
-    // private readonly ImageRepository: ImageRepository,
+    private readonly ImageRepository: ImageRepository,
   ) { }
 
   async execute(reqBody: IUploadImage.Request): Promise<IUploadImage.Response> {
@@ -74,7 +74,8 @@ export class UploadImageImpl implements IUploadImage {
     const newImage: Image = {
       buffer_data: base64ToBuffer(base64Image),
       image_uuid: uuidv4(),
-      type: extension
+      type: extension,
+      expiration_date: new Date(Date.now() + 48 * 60 * 60 * 1000)
     }
 
     const uniqueFileName = `${newImage.image_uuid}.${extension}`;
@@ -87,9 +88,8 @@ export class UploadImageImpl implements IUploadImage {
       const measureValue = extractNumber(iaResponse)
 
       fs.unlinkSync(filePath);
-      
-      // Não consegui a tempo 😔😔
-      // const savedImage = await this.ImageRepository.saveImage(newImage)
+
+      await this.ImageRepository.saveImage(newImage)
       const tempMeasureUrl = `http://localhost:4000/images/${uniqueFileName}`
 
       const newMeasure: MeasureProps = {

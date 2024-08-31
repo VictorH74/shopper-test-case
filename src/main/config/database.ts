@@ -30,10 +30,10 @@ const createMeasureTable = async () => {
 
     try {
         const res = await Client.query(queryText);
-        console.log('Tabela criada ou já existente:', res.command);
+        console.log("Tabela 'measure' criada ou já existente:", res.command);
     } catch (err) {
         const stack = err instanceof Error ? err.stack : undefined;
-        console.error('Erro ao criar tabela:', stack);
+        console.error("Erro ao criar tabela 'measure':", stack);
         console.error(err);
     }
 }
@@ -43,16 +43,17 @@ const createImageTable = async () => {
     CREATE TABLE IF NOT EXISTS image (
       image_uuid UUID PRIMARY KEY,
       buffer_data BYTEA  NOT NULL,
-      type VARCHAR(10) NOT NULL
+      type VARCHAR(10) NOT NULL,
+      expiration_date TIMESTAMPTZ NOT NULL
     );
   `;
 
     try {
         const res = await Client.query(queryText);
-        console.log('Tabela criada ou já existente:', res.command);
+        console.log("Tabela 'image' criada ou já existente:", res.command);
     } catch (err) {
         const stack = err instanceof Error ? err.stack : undefined;
-        console.error('Erro ao criar tabela:', stack);
+        console.error("Erro ao criar tabela 'image':", stack);
         console.error(err);
     }
 }

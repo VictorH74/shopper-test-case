@@ -1,8 +1,7 @@
-import setupApp from '@/main/config/app';
+import setupApp from "./config/app";
 
 // TODO: create README.MD
 // TODO: create unit tests
-
 
 setupApp().then(app => {
   app.listen(4000, () => {
