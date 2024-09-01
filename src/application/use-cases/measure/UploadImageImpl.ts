@@ -9,6 +9,7 @@ import { ServerError } from '@/infra/http/errors/ServerError';
 import path from 'path';
 import { ImageRepository } from '@/infra/db/postgres/ImageRepository';
 import { Image } from '@/domain/entities/Image';
+import { env } from '@/main/config/env';
 
 function validateString(input: string): boolean {
   const pattern = /^[0-9]+/;
@@ -90,7 +91,7 @@ export class UploadImageImpl implements IUploadImage {
       fs.unlinkSync(filePath);
 
       await this.ImageRepository.saveImage(newImage)
-      const tempMeasureUrl = `http://localhost:4000/images/${uniqueFileName}`
+      const tempMeasureUrl = `${env.BASE_URL}/images/${uniqueFileName}`
 
       const newMeasure: MeasureProps = {
         customer_code: reqBody.customer_code,

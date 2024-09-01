@@ -1,7 +1,7 @@
 import { Image } from "@/domain/entities/Image";
 
 export interface GetImageByIdRepository {
-    getImageById(image_uuid: GetImageByIdRepository.Request): Promise<GetImageByIdRepository.Response>;
+    getImageById(paramsObj: GetImageByIdRepository.Request): Promise<GetImageByIdRepository.Response>;
 }
 
 export namespace GetImageByIdRepository {

@@ -1,6 +1,5 @@
 import setupApp from "./config/app";
 
-// TODO: create README.MD
 // TODO: create unit tests
 
 setupApp().then(app => {

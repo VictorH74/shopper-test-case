@@ -13,6 +13,7 @@ export const expressJsonRouteAdapter = (
     headers: req.headers,
     query: req.query,
   };
+
   const httpResponse = await controller.handle(httpRequest);
   res.status(httpResponse.statusCode).json(httpResponse.body);
 };
@@ -29,11 +30,7 @@ export const expressBufferRouteAdapter = (
   const httpResponse = await controller.handle(httpRequest);
 
   if (!Object.hasOwn(httpResponse.body, `buffer`)) {
-    const errorObj: HttpResponseError = {
-      error_code: 'SERVER_ERROR',
-      error_description: 'Buffer de resposta inválido'
-    }
-    return res.status(500).json(errorObj)
+    return res.status(httpResponse.statusCode).json(httpResponse.body)
   }
 
   res.set('Content-Type', `image/${httpResponse.body.type}`);
