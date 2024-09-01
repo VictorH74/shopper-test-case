@@ -9,7 +9,19 @@ import { getCustomerMeasureListDataSchema } from '@/infra/http/validations/measu
 import { makeGetCustomerMeasureListController } from '../factories/controllers/measure/get-customer-measure-list/controller-factory';
 
 export default function measureRoutes(router: Router) {
-  router.get('/:customerCode/list', validate(getCustomerMeasureListDataSchema, 'INVALID_TYPE'), expressJsonRouteAdapter(makeGetCustomerMeasureListController()))
-  router.post('/upload', validate(uploadImageDataSchema, 'INVALID_DATA'), expressJsonRouteAdapter(makeUploadImageController()));
-  router.patch('/confirm', validate(confirmValueDataSchema, 'INVALID_DATA'), expressJsonRouteAdapter(makeConfirmValueController()));
+    router.get(
+        '/:customerCode/list',
+        validate(getCustomerMeasureListDataSchema, 'INVALID_TYPE'),
+        expressJsonRouteAdapter(makeGetCustomerMeasureListController())
+    );
+    router.post(
+        '/upload',
+        validate(uploadImageDataSchema, 'INVALID_DATA'),
+        expressJsonRouteAdapter(makeUploadImageController())
+    );
+    router.patch(
+        '/confirm',
+        validate(confirmValueDataSchema, 'INVALID_DATA'),
+        expressJsonRouteAdapter(makeConfirmValueController())
+    );
 }

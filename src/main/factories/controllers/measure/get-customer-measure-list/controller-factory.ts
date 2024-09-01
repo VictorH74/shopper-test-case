@@ -3,6 +3,6 @@ import { GetCustomerMeasureListController } from '@/infra/http/controllers/measu
 import { makeGetCustomerMeasureList } from '@/main/factories/use-cases/measure/get-customer-measure-list-factory';
 
 export const makeGetCustomerMeasureListController = (): BaseController => {
-  const useCase = makeGetCustomerMeasureList();
-  return new GetCustomerMeasureListController(useCase);
+    const useCase = makeGetCustomerMeasureList();
+    return new GetCustomerMeasureListController(useCase);
 };

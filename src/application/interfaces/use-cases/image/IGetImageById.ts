@@ -8,7 +8,6 @@ export interface IGetImageById
 }
 
 export namespace IGetImageById {
-    export type Request = { image_uuid: string, image_type: string }
-    export type Response = Image
-        | ImageNotFoundError;
+    export type Request = { image_uuid: string; image_type: string };
+    export type Response = Image | ImageNotFoundError;
 }

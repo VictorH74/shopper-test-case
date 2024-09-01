@@ -6,9 +6,9 @@ export type ErrorCodeType =
     | 'CONFIRMATION_DUPLICATE'
     | 'INVALID_TYPE'
     | 'SERVER_ERROR'
-    | 'CUSTOMER_NOT_FOUND'
+    | 'CUSTOMER_NOT_FOUND';
 
 export type HttpResponseError = {
     error_code: string;
-    error_description: string
-}
+    error_description: string;
+};

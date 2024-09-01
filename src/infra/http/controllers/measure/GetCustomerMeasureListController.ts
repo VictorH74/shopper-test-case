@@ -7,32 +7,40 @@ import { CustomerNotFoundError } from '@/application/errors/CustomerNotFoundErro
 import { MeasuresNotFoundError } from '@/application/errors/MeasuresNotFoundError';
 
 export class GetCustomerMeasureListController extends BaseController {
-  constructor(
-    private readonly getCustomerMeasureList: IGetCustomerMeasureList,
-  ) {
-    super();
-  }
-
-  async execute(
-    httpRequest: GetCustomerMeasureListController.Request,
-  ): Promise<GetCustomerMeasureListController.Response> {
-    const { params, query } = httpRequest;
-
-    const dataOrError = await this.getCustomerMeasureList.execute({ customerCode: params!.customerCode, measure_type: query?.measure_type });
-
-    if (dataOrError instanceof MeasuresNotFoundError) {
-      return notFound(dataOrError);
+    constructor(
+        private readonly getCustomerMeasureList: IGetCustomerMeasureList
+    ) {
+        super();
     }
 
-    if (dataOrError instanceof CustomerNotFoundError) {
-      return notFound(dataOrError);
-    }
+    async execute(
+        httpRequest: GetCustomerMeasureListController.Request
+    ): Promise<GetCustomerMeasureListController.Response> {
+        const { params, query } = httpRequest;
 
-    return ok(dataOrError);
-  }
+        const dataOrError = await this.getCustomerMeasureList.execute({
+            customerCode: params!.customerCode,
+            measure_type: query?.measure_type,
+        });
+
+        if (dataOrError instanceof MeasuresNotFoundError) {
+            return notFound(dataOrError);
+        }
+
+        if (dataOrError instanceof CustomerNotFoundError) {
+            return notFound(dataOrError);
+        }
+
+        return ok(dataOrError);
+    }
 }
 
 export namespace GetCustomerMeasureListController {
-  export type Request = HttpRequest<undefined, { customerCode: string }, undefined, { measure_type?: 'WATER' | 'GAS' }>;
-  export type Response = HttpResponse<IGetCustomerMeasureList.Response>;
+    export type Request = HttpRequest<
+        undefined,
+        { customerCode: string },
+        undefined,
+        { measure_type?: 'WATER' | 'GAS' }
+    >;
+    export type Response = HttpResponse<IGetCustomerMeasureList.Response>;
 }

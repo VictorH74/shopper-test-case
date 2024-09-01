@@ -3,5 +3,5 @@ import { ConfirmValueImpl } from '@/application/use-cases/measure/ConfirmValueIm
 import { measureRepositoryInstance } from '@/infra/db/postgres/MeasureRepository';
 
 export const makeConfirmValue = (): IConfirmValue => {
-  return new ConfirmValueImpl(measureRepositoryInstance);
+    return new ConfirmValueImpl(measureRepositoryInstance);
 };

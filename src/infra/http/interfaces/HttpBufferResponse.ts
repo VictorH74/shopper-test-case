@@ -1,4 +1,4 @@
 export type HttpBufferResponse = {
     buffer: Buffer;
-    type: string
-}
+    type: string;
+};

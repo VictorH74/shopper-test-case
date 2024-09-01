@@ -3,14 +3,14 @@ import { HttpResponse } from '@/infra/http/interfaces/HttpResponse';
 import { serverError } from '@/infra/http/helpers/http';
 
 export abstract class BaseController {
-  abstract execute(httpRequest: HttpRequest): Promise<HttpResponse>;
+    abstract execute(httpRequest: HttpRequest): Promise<HttpResponse>;
 
-  async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
-    try {
-      return await this.execute(httpRequest);
-    } catch (error) {
-      console.error(error)
-      return serverError(error);
+    async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
+        try {
+            return await this.execute(httpRequest);
+        } catch (error) {
+            console.error(error);
+            return serverError(error);
+        }
     }
-  }
 }

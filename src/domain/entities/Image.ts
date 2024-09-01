@@ -1,4 +1,3 @@
-
 export type ImageProps = {
     image_uuid: string;
     buffer_data: Buffer;

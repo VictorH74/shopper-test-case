@@ -1,6 +1,6 @@
-import { HttpResponseError } from "./HttpResponseError";
+import { HttpResponseError } from './HttpResponseError';
 
 export type HttpResponse<T = any> = {
     statusCode: number;
     body?: T | HttpResponseError;
-  };
+};

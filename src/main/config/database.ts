@@ -1,12 +1,7 @@
-import { Pool } from "pg";
-import { env } from "./env";
+import { Pool } from 'pg';
+import { env } from './env';
 
-const {
-    DB_NAME,
-    DB_USER,
-    DB_PASS,
-    DB_PORT,
-} = env
+const { DB_NAME, DB_USER, DB_PASS, DB_PORT } = env;
 
 export const Client = new Pool({
     host: 'postgres_db',
@@ -37,7 +32,7 @@ const createMeasureTable = async () => {
         console.error("Erro ao criar tabela 'measure':", stack);
         console.error(err);
     }
-}
+};
 
 const createImageTable = async () => {
     const queryText = `
@@ -57,9 +52,9 @@ const createImageTable = async () => {
         console.error("Erro ao criar tabela 'image':", stack);
         console.error(err);
     }
-}
+};
 
 export const setupDbClient = async () => {
-    await createMeasureTable()
-    await createImageTable()
-}
+    await createMeasureTable();
+    await createImageTable();
+};

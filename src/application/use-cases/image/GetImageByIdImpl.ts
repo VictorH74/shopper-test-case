@@ -1,12 +1,12 @@
 import { ImageNotFoundError } from "@/application/errors/ImageNotFoundError";
 import { InvalidImageExtensionError } from "@/application/errors/InvalidImageExtensionError";
+import { IImageRepository } from "@/application/interfaces/repositories/IImageRepository";
 import { IGetImageById } from "@/application/interfaces/use-cases/image/IGetImageById";
-import { ImageRepository } from "@/infra/db/postgres/ImageRepository";
 
 
 export class GetImageByIdImpl implements IGetImageById {
     constructor(
-        private readonly ImageRepository: ImageRepository,
+        private readonly ImageRepository: IImageRepository,
     ) { }
 
     async execute({ image_uuid, image_type }: IGetImageById.Request): Promise<IGetImageById.Response> {

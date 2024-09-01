@@ -10,13 +10,14 @@ export interface IConfirmValue
 
 export namespace IConfirmValue {
     export type Request = {
-        measure_uuid: string,
-        confirmed_value: number
-    }
-    export type Response = {
-        success: true,
-    }
-    | InvalidDataError
-    | MeasureNotFoundError
-    | ConfirmationDuplicateError;
+        measure_uuid: string;
+        confirmed_value: number;
+    };
+    export type Response =
+        | {
+              success: true;
+          }
+        | InvalidDataError
+        | MeasureNotFoundError
+        | ConfirmationDuplicateError;
 }

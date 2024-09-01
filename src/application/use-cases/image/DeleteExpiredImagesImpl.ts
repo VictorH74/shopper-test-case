@@ -1,14 +1,12 @@
+import { IImageRepository } from "@/application/interfaces/repositories/IImageRepository";
 import { IDeleteExpiredImages } from "@/application/interfaces/use-cases/image/IDeleteExpiredImages";
-import { ImageRepository } from "@/infra/db/postgres/ImageRepository";
-
 
 export class DeleteExpiredImagesImpl implements IDeleteExpiredImages {
     constructor(
-        private readonly ImageRepository: ImageRepository,
+        private readonly ImageRepository: IImageRepository,
     ) { }
 
     async execute(): Promise<IDeleteExpiredImages.Response> {
-        
         await this.ImageRepository.deleteExpiredImages()
     }
 }

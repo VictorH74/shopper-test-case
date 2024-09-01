@@ -7,7 +7,10 @@ export const ok = <T = any>(body: T): HttpResponse<T> => ({
     body,
 });
 
-const bodyFromError = (error: Error): HttpResponseError => ({ error_code: error.name, error_description: error.message })
+const bodyFromError = (error: Error): HttpResponseError => ({
+    error_code: error.name,
+    error_description: error.message,
+});
 
 export const noContent = (): HttpResponse => ({
     statusCode: 204,
@@ -28,7 +31,9 @@ export const conflict = (error: Error): HttpResponse<HttpResponseError> => ({
     body: bodyFromError(error),
 });
 
-export const serverError = (error?: Error | unknown): HttpResponse<HttpResponseError> => {
+export const serverError = (
+    error?: Error | unknown
+): HttpResponse<HttpResponseError> => {
     const msg = error instanceof Error ? error.message : undefined;
     return {
         statusCode: 500,
