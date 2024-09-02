@@ -36,6 +36,39 @@ Este projeto implementa o backend de um serviço de leitura individualizada de c
 -   **Cron Job:**
     -   Um cron job, rodando a cada 3 minutos, verifica e remove imagens expiradas do banco de dados. Para isso, o projeto utiliza o pacote `node-cron`.
 
+### Testes Unitários
+
+O projeto inclui testes unitários para garantir a corretude e a robustez dos principais casos de uso implementados. Os testes foram desenvolvidos utilizando o framework **Jest**.
+
+#### Use Cases Testados:
+
+-   **ConfirmValue**
+
+    -   Verifica se a confirmação do valor lido pelo LLM é realizada corretamente, incluindo a verificação de duplicatas e a atualização do valor confirmado no banco de dados.
+    -   **Testes Incluídos:**
+        -   Chama o repositório com o UUID correto.
+        -   Atualiza a leitura com a confirmação correta.
+        -   Retorna um erro se a medição não for encontrada.
+        -   Retorna um erro se a confirmação for duplicada.
+        -   Retorna sucesso ao confirmar corretamente.
+
+-   **GetCustomerMeasure**
+
+    -   Garante que a lista de medições de um cliente é recuperada corretamente, com a opção de filtragem por tipo de medição.
+    -   **Testes Incluídos:**
+        -   Recupera a lista de medições com o código de cliente e tipo de medição corretos.
+        -   Retorna um erro se nenhuma medição for encontrada.
+        -   Retorna a lista de medições corretamente associadas ao cliente.
+
+-   **UploadImage**
+    -   Valida o processo de upload de imagem, verificação de duplicatas e armazenamento das informações de medição e imagem no banco de dados.
+    -   **Testes Incluídos:**
+        -   Verifica a existência de medições duplicadas.
+        -   Armazena a imagem com os dados corretos.
+        -   Salva a medição com os dados corretos.
+        -   Retorna um erro em caso de medição duplicada.
+        -   Retorna sucesso com o URL da imagem e os dados da medição.
+
 ### Variáveis de Ambiente
 
 -   As variáveis de ambiente relacionadas ao banco de dados e à URL base são definidas no arquivo `docker-compose.yml`.
