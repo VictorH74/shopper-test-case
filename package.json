@@ -7,7 +7,7 @@
         "start": "NODE_PATH=./build node build/index.js",
         "build": "tsc -p .",
         "dev": "nodemon src/main/server.ts",
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "test": "jest"
     },
     "author": "Victor Almeida",
     "license": "ISC",

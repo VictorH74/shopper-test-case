@@ -5,7 +5,11 @@
     "compilerOptions": {
         "baseUrl": ".",
         "paths": {
-            "@/*": ["src/*"]
+            "@application/*": ["src/application/*"],
+            "@domain/*": ["src/domain/*"],
+            "@infra/*": ["src/infra/*"],
+            "@main/*": ["src/main/*"],
+            "@tests/*": ["tests/*"]
         },
         /* Language and Environment */
         "target": "ESNext",
