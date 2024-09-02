@@ -1,7 +1,7 @@
-import { DoubleReportError } from '@/application/errors/DoubleReportError';
-import { InvalidDataError } from '@/application/errors/InvalidDataError';
-import { UseCase } from '@/application/interfaces/use-cases/UseCase';
-import { MeasureType } from '@/domain/entities/Measure';
+import { DoubleReportError } from '@application/errors/DoubleReportError';
+import { InvalidDataError } from '@application/errors/InvalidDataError';
+import { UseCase } from '@application/interfaces/use-cases/UseCase';
+import { MeasureType } from '@domain/entities/Measure';
 
 export interface IUploadImage
     extends UseCase<IUploadImage.Request, IUploadImage.Response> {

@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
-import { HttpRequest } from '@/infra/http/interfaces/HttpRequest';
-import { BaseController } from '@/infra/http/controllers/BaseController';
-import { HttpBufferResponse } from '@/infra/http/interfaces/HttpBufferResponse';
-import { HttpResponseError } from '@/infra/http/interfaces/HttpResponseError';
+import { HttpRequest } from '@infra/http/interfaces/HttpRequest';
+import { BaseController } from '@infra/http/controllers/BaseController';
+import { HttpBufferResponse } from '@infra/http/interfaces/HttpBufferResponse';
+import { HttpResponseError } from '@infra/http/interfaces/HttpResponseError';
 
 export const expressJsonRouteAdapter =
     (controller: BaseController) => async (req: Request, res: Response) => {

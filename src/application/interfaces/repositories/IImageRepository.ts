@@ -1,4 +1,4 @@
-import { Image } from '@/domain/entities/Image';
+import { Image } from '@domain/entities/Image';
 
 export interface IImageRepository {
     deleteExpiredImages(): Promise<void>;
@@ -11,6 +11,6 @@ export interface IImageRepository {
 }
 
 export namespace IImageRepository {
-    export type SaveImageRequest = Image;
+    export type SaveImageRequest = Omit<Image, 'image_uuid'>;
     export type GetImageByIdRequest = string;
 }

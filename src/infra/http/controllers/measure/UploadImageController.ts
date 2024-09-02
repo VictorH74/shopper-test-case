@@ -1,15 +1,15 @@
-import { IUploadImage } from '@/application/interfaces/use-cases/measure/IUploadImage';
-import { BaseController } from '@/infra/http/controllers/BaseController';
-import { HttpRequest } from '@/infra/http/interfaces/HttpRequest';
-import { HttpResponse } from '@/infra/http/interfaces/HttpResponse';
+import { IUploadImage } from '@application/interfaces/use-cases/measure/IUploadImage';
+import { BaseController } from '@infra/http/controllers/BaseController';
+import { HttpRequest } from '@infra/http/interfaces/HttpRequest';
+import { HttpResponse } from '@infra/http/interfaces/HttpResponse';
 import {
     badRequest,
     conflict,
     ok,
     serverError,
-} from '@/infra/http/helpers/http';
-import { DoubleReportError } from '@/application/errors/DoubleReportError';
-import { InvalidDataError } from '@/application/errors/InvalidDataError';
+} from '@infra/http/helpers/http';
+import { DoubleReportError } from '@application/errors/DoubleReportError';
+import { InvalidDataError } from '@application/errors/InvalidDataError';
 
 export class UploadImageController extends BaseController {
     constructor(private readonly UploadImage: IUploadImage) {

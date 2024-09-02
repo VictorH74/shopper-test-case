@@ -1,6 +1,6 @@
-import { MeasuresNotFoundError } from '@/application/errors/MeasuresNotFoundError';
-import { IMeasureRepository } from '@/application/interfaces/repositories/IMeasureRepository';
-import { IGetCustomerMeasureList } from '@/application/interfaces/use-cases/measure/IGetCustomerMeasureList';
+import { MeasuresNotFoundError } from '@application/errors/MeasuresNotFoundError';
+import { IMeasureRepository } from '@application/interfaces/repositories/IMeasureRepository';
+import { IGetCustomerMeasureList } from '@application/interfaces/use-cases/measure/IGetCustomerMeasureList';
 
 export class GetCustomerMeasureListImpl implements IGetCustomerMeasureList {
     constructor(private readonly MeasureRepository: IMeasureRepository) {}

@@ -4,7 +4,7 @@ export type MeasureProps = {
     measure_uuid: string;
     customer_code: string;
     measure_datetime: Date;
-    measure_type: string;
+    measure_type: MeasureType;
     measure_value: number;
     has_confirmed: boolean;
     image_url: string;
@@ -17,7 +17,7 @@ export class Measure {
 
     public readonly measure_datetime: Date;
 
-    public readonly measure_type: string;
+    public readonly measure_type: MeasureType;
 
     public readonly measure_value: number;
 

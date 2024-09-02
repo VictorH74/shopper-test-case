@@ -1,4 +1,4 @@
-import { HttpResponseError } from '@/infra/http/interfaces/HttpResponseError';
+import { HttpResponseError } from '@infra/http/interfaces/HttpResponseError';
 import { NextFunction, Request, Response } from 'express';
 import { AnyZodObject, ZodError } from 'zod';
 

@@ -1,5 +1,5 @@
-import { HttpResponse } from '@/infra/http/interfaces/HttpResponse';
-import { ServerError } from '@/infra/http/errors/ServerError';
+import { HttpResponse } from '@infra/http/interfaces/HttpResponse';
+import { ServerError } from '@infra/http/errors/ServerError';
 import { HttpResponseError } from '../interfaces/HttpResponseError';
 
 export const ok = <T = any>(body: T): HttpResponse<T> => ({

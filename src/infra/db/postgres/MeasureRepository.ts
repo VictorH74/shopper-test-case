@@ -1,6 +1,7 @@
-import { IMeasureRepository } from '@/application/interfaces/repositories/IMeasureRepository';
-import { Measure } from '@/domain/entities/Measure';
-import { Client } from '@/main/config/database';
+import { IMeasureRepository } from '@application/interfaces/repositories/IMeasureRepository';
+import { Measure } from '@domain/entities/Measure';
+import { Client } from '@main/config/database';
+import { v4 as uuidv4 } from 'uuid';
 
 export class MeasureRepository implements IMeasureRepository {
     async checkExistenceOfMeasureByMonth(
@@ -43,7 +44,6 @@ export class MeasureRepository implements IMeasureRepository {
 
     async saveMeasure(measure_data: IMeasureRepository.SaveMeasureRequest) {
         const {
-            measure_uuid,
             measure_datetime,
             measure_type,
             measure_value,
@@ -57,7 +57,7 @@ export class MeasureRepository implements IMeasureRepository {
          VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`;
 
         const res = await Client.query<Measure>(queryText, [
-            measure_uuid,
+            uuidv4(),
             measure_datetime,
             measure_type,
             measure_value,

@@ -1,4 +1,4 @@
-import { UseCase } from '@/application/interfaces/use-cases/UseCase';
+import { UseCase } from '@application/interfaces/use-cases/UseCase';
 
 export interface IDeleteExpiredImages
     extends UseCase<undefined, IDeleteExpiredImages.Response> {

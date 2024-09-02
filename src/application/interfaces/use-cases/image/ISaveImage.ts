@@ -1,6 +1,6 @@
-import { ImageNotFoundError } from '@/application/errors/ImageNotFoundError';
-import { UseCase } from '@/application/interfaces/use-cases/UseCase';
-import { Image } from '@/domain/entities/Image';
+import { ImageNotFoundError } from '@application/errors/ImageNotFoundError';
+import { UseCase } from '@application/interfaces/use-cases/UseCase';
+import { Image } from '@domain/entities/Image';
 
 export interface ISaveImage
     extends UseCase<ISaveImage.Request, ISaveImage.Response> {
@@ -8,6 +8,6 @@ export interface ISaveImage
 }
 
 export namespace ISaveImage {
-    export type Request = Image;
-    export type Response = Image;
+    export type Request = Omit<Image, 'image_uuid'>;
+    export type Response = string;
 }

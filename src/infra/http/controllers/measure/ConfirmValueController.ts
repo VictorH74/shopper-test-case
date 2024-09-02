@@ -1,17 +1,17 @@
-import { IConfirmValue } from '@/application/interfaces/use-cases/measure/IConfirmValue';
-import { BaseController } from '@/infra/http/controllers/BaseController';
-import { HttpRequest } from '@/infra/http/interfaces/HttpRequest';
-import { HttpResponse } from '@/infra/http/interfaces/HttpResponse';
+import { IConfirmValue } from '@application/interfaces/use-cases/measure/IConfirmValue';
+import { BaseController } from '@infra/http/controllers/BaseController';
+import { HttpRequest } from '@infra/http/interfaces/HttpRequest';
+import { HttpResponse } from '@infra/http/interfaces/HttpResponse';
 import {
     badRequest,
     conflict,
     notFound,
     ok,
     serverError,
-} from '@/infra/http/helpers/http';
-import { InvalidDataError } from '@/application/errors/InvalidDataError';
-import { ConfirmationDuplicateError } from '@/application/errors/ConfirmationDuplicateError';
-import { MeasureNotFoundError } from '@/application/errors/MeasureNotFoundError';
+} from '@infra/http/helpers/http';
+import { InvalidDataError } from '@application/errors/InvalidDataError';
+import { ConfirmationDuplicateError } from '@application/errors/ConfirmationDuplicateError';
+import { MeasureNotFoundError } from '@application/errors/MeasureNotFoundError';
 
 export class ConfirmValueController extends BaseController {
     constructor(private readonly ConfirmValue: IConfirmValue) {

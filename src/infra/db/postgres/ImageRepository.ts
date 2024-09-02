@@ -1,6 +1,7 @@
-import { IImageRepository } from '@/application/interfaces/repositories/IImageRepository';
-import { Image } from '@/domain/entities/Image';
-import { Client } from '@/main/config/database';
+import { IImageRepository } from '@application/interfaces/repositories/IImageRepository';
+import { Image } from '@domain/entities/Image';
+import { Client } from '@main/config/database';
+import { v4 as uuidv4 } from 'uuid';
 
 export class ImageRepository implements IImageRepository {
     async deleteExpiredImages() {
@@ -12,14 +13,14 @@ export class ImageRepository implements IImageRepository {
     }
 
     async saveImage(image_data: IImageRepository.SaveImageRequest) {
-        const { buffer_data, image_uuid, type, expiration_date } = image_data;
+        const { buffer_data, type, expiration_date } = image_data;
 
         const queryText = `INSERT INTO 
         image (image_uuid, buffer_data, type, expiration_date)
          VALUES ($1, $2, $3, $4) RETURNING *`;
 
         const res = await Client.query<Image>(queryText, [
-            image_uuid,
+            uuidv4(),
             buffer_data,
             type,
             expiration_date,

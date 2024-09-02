@@ -1,7 +1,7 @@
-import { IConfirmValue } from '@/application/interfaces/use-cases/measure/IConfirmValue';
-import { MeasureNotFoundError } from '@/application/errors/MeasureNotFoundError';
-import { ConfirmationDuplicateError } from '@/application/errors/ConfirmationDuplicateError';
-import { IMeasureRepository } from '@/application/interfaces/repositories/IMeasureRepository';
+import { IConfirmValue } from '@application/interfaces/use-cases/measure/IConfirmValue';
+import { MeasureNotFoundError } from '@application/errors/MeasureNotFoundError';
+import { ConfirmationDuplicateError } from '@application/errors/ConfirmationDuplicateError';
+import { IMeasureRepository } from '@application/interfaces/repositories/IMeasureRepository';
 
 export class ConfirmValueImpl implements IConfirmValue {
     constructor(private readonly MeasureRepository: IMeasureRepository) {}

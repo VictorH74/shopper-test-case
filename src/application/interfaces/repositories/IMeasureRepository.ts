@@ -1,4 +1,4 @@
-import { Measure, MeasureType } from '@/domain/entities/Measure';
+import { Measure, MeasureType } from '@domain/entities/Measure';
 
 export interface IMeasureRepository {
     checkExistenceOfMeasureByMonth(
@@ -34,7 +34,7 @@ export namespace IMeasureRepository {
         customerCode: string,
         measure_type?: MeasureType | undefined
     ];
-    export type SaveMeasureRequest = Measure;
+    export type SaveMeasureRequest = Omit<Measure, 'measure_uuid'>;
     export type UpdateMeasureRequest = [
         measure_id: string,
         measure_data: Measure

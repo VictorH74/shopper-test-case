@@ -1,60 +1,27 @@
-import { IUploadImage } from '@/application/interfaces/use-cases/measure/IUploadImage';
-import { v4 as uuidv4 } from 'uuid';
-import { DoubleReportError } from '@/application/errors/DoubleReportError';
+import { IUploadImage } from '@application/interfaces/use-cases/measure/IUploadImage';
+import { DoubleReportError } from '@application/errors/DoubleReportError';
 import fs from 'fs';
-import { getMeasureValueFromImage } from '@/main/lib/gemini-ia';
-import { MeasureProps } from '@/domain/entities/Measure';
-import { ServerError } from '@/infra/http/errors/ServerError';
+import { MeasureProps } from '@domain/entities/Measure';
+import { ServerError } from '@infra/http/errors/ServerError';
 import path from 'path';
-import { Image } from '@/domain/entities/Image';
-import { env } from '@/main/config/env';
-import { IMeasureRepository } from '@/application/interfaces/repositories/IMeasureRepository';
-import { ISaveImage } from '@/application/interfaces/use-cases/image/ISaveImage';
-
-function validateString(input: string): boolean {
-    const pattern = /^[0-9]+/;
-    return pattern.test(input);
-}
-
-function extractNumber(input: string): number {
-    if (!validateString(input)) {
-        console.error('Erro ao extratir valor inteiro da leitura');
-        console.error('input value: ', input);
-        throw new Error('Erro ao extratir valor da leitura');
-    }
-
-    return Number(input);
-}
-
-const base64ToBuffer = (base64Image: string) => {
-    const imageData = base64Image.replace(/^data:image\/\w+;base64,/, '');
-    return Buffer.from(imageData, 'base64');
-};
-
-const extractBase64Details = (base64Image: string) => {
-    const mimeType = base64Image.match(/^data:(image\/\w+);base64,/)![1];
-    const extension = mimeType.split('/')[1]; // e.g., 'jpeg', 'png', etc.
-    return {
-        mimeType,
-        extension,
-    };
-};
-
-const getCurrentMonthDate = (measure_datetime: Date) => {
-    const reqMeasureDate = new Date(measure_datetime);
-    const currentMonthDate = new Date(0);
-    currentMonthDate.setFullYear(reqMeasureDate.getFullYear());
-    currentMonthDate.setMonth(reqMeasureDate.getMonth());
-
-    return currentMonthDate;
-};
-
-const getTwoDaysLaterDateTime = () => Date.now() + 48 * 60 * 60 * 1000;
+import { IMeasureRepository } from '@application/interfaces/repositories/IMeasureRepository';
+import { ISaveImage } from '@application/interfaces/use-cases/image/ISaveImage';
+import {
+    base64ToBuffer,
+    extractBase64Details,
+    extractNumber,
+    getCurrentMonthDate,
+    getTwoDaysLaterDateTime,
+} from '@main/utils/functions';
 
 export class UploadImageImpl implements IUploadImage {
     constructor(
         private readonly MeasureRepository: IMeasureRepository,
-        private readonly SaveImage: ISaveImage
+        private readonly SaveImage: ISaveImage,
+        private readonly getMeasureValueFromImage: (
+            filePath: string,
+            mimeType: string
+        ) => Promise<string>
     ) {}
 
     async execute(
@@ -75,24 +42,19 @@ export class UploadImageImpl implements IUploadImage {
             return new DoubleReportError();
         }
 
-        const base64Image = reqBody.image;
-
-        const { mimeType, extension } = extractBase64Details(base64Image);
-
-        const newImage: Image = {
-            buffer_data: base64ToBuffer(base64Image),
-            image_uuid: uuidv4(),
-            type: extension,
-            expiration_date: new Date(getTwoDaysLaterDateTime()),
-        };
-
-        const uniqueFileName = `${newImage.image_uuid}.${extension}`;
-        const filePath = path.join('/tmp', uniqueFileName);
-
-        fs.writeFileSync(filePath, newImage.buffer_data);
-
         try {
-            const iaResponse = await getMeasureValueFromImage(
+            const base64Image = reqBody.image;
+
+            const { mimeType, extension } = extractBase64Details(base64Image);
+
+            const uniqueFileName = `image.${extension}`;
+            const filePath = path.join('/tmp', uniqueFileName);
+
+            const buffer_data = base64ToBuffer(base64Image);
+
+            fs.writeFileSync(filePath, buffer_data);
+
+            const iaResponse = await this.getMeasureValueFromImage(
                 filePath,
                 mimeType
             );
@@ -100,16 +62,18 @@ export class UploadImageImpl implements IUploadImage {
 
             fs.unlinkSync(filePath);
 
-            await this.SaveImage.execute(newImage);
-            const tempMeasureUrl = `${env.BASE_URL}/images/${uniqueFileName}`;
+            const saved_img_url = await this.SaveImage.execute({
+                buffer_data: buffer_data,
+                type: extension,
+                expiration_date: new Date(getTwoDaysLaterDateTime()),
+            });
 
-            const newMeasure: MeasureProps = {
+            const newMeasure: Omit<MeasureProps, 'measure_uuid'> = {
                 customer_code: reqBody.customer_code,
                 has_confirmed: false,
-                image_url: tempMeasureUrl,
+                image_url: saved_img_url,
                 measure_datetime: reqBody.measure_datetime,
                 measure_type: reqBody.measure_type,
-                measure_uuid: uuidv4(),
                 measure_value: measureValue,
             };
 
