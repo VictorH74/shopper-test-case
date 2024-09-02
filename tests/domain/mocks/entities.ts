@@ -2,7 +2,7 @@ import { Image } from '@domain/entities/Image';
 import { Measure } from '@domain/entities/Measure';
 
 export const makeFakeImage = (): Image => ({
-    buffer_data: new Buffer([]),
+    buffer_data: Buffer.from([]),
     expiration_date: new Date(0),
     image_uuid: 'b6a07fc8-3b26-434d-961b-591303d4de29',
     type: 'png',
